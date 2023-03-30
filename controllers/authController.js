@@ -34,7 +34,7 @@ module.exports.registerController = async (req, res, next) => {
   });
 };
 
-module.exports.loginController = async (req, res) => {
+module.exports.loginController = async (req, res, next) => {
   const { email, password } = req.body;
   // validation
   if (!email || !password) {
@@ -42,8 +42,21 @@ module.exports.loginController = async (req, res) => {
   }
 
   // find user by email
-  const user = await userModel.findOne({ email });
+  const user = await userModel.findOne({ email }).select("+password");
   if (!user) {
-    next("Invalid username or password");
+    next("Invalid Username or Password");
   }
+  // compare password
+  const isMatch = await user.comparePassword(password);
+  if (!isMatch) {
+    next("Invalid Username or Password");
+  }
+  user.password = undefined;
+  const token = user.createJWT();
+  res.status(200).json({
+    success: true,
+    message: "Login Successful! Welcome back",
+    user,
+    token,
+  });
 };
