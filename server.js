@@ -9,6 +9,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db.js");
 // routes
 const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
 const errorMiddleware = require("./middlewares/errorMiddleware.js");
 
 // dotenv config
@@ -27,6 +28,7 @@ app.use(morgan("dev"));
 
 // routes
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/user", userRoutes);
 
 // validation middleware
 app.use(errorMiddleware);
