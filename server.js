@@ -8,7 +8,6 @@ const dotenv = require("dotenv");
 // files imports
 const connectDB = require("./config/db.js");
 // routes
-const testRoutes = require("./routes/testRoute");
 const authRoutes = require("./routes/authRoutes");
 const errorMiddleware = require("./middlewares/errorMiddleware.js");
 
