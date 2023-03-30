@@ -34,6 +34,7 @@ module.exports.registerController = async (req, res, next) => {
   });
 };
 
+// user login controller
 module.exports.loginController = async (req, res, next) => {
   const { email, password } = req.body;
   // validation
@@ -44,12 +45,12 @@ module.exports.loginController = async (req, res, next) => {
   // find user by email
   const user = await userModel.findOne({ email }).select("+password");
   if (!user) {
-    next("Invalid Username or Password");
+    next("Invalid Username or password");
   }
   // compare password
   const isMatch = await user.comparePassword(password);
   if (!isMatch) {
-    next("Invalid Username or Password");
+    next("Invalid Username or password");
   }
   user.password = undefined;
   const token = user.createJWT();
