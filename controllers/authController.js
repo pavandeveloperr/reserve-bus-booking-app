@@ -33,3 +33,17 @@ module.exports.registerController = async (req, res, next) => {
     token,
   });
 };
+
+module.exports.loginController = async (req, res) => {
+  const { email, password } = req.body;
+  // validation
+  if (!email || !password) {
+    next("Please Provide all fields");
+  }
+
+  // find user by email
+  const user = await userModel.findOne({ email });
+  if (!user) {
+    next("Invalid username or password");
+  }
+};
