@@ -2,9 +2,23 @@ import { faBars, faBus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../../context/auth";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
+  const [auth, setAuth] = useAuth();
+
+  // logout handler
+  const handleLogOut = () => {
+    setAuth({
+      ...auth,
+      user: null,
+      token: "",
+    });
+    localStorage.removeItem("auth");
+    toast.success("Logout Successful");
+  };
   return (
     <>
       <div className="shadow-md w-full top-0 left-0">
@@ -36,15 +50,32 @@ const Header = () => {
               <Link>Contact Us</Link>
             </li>
             {/* Navbar buttons */}
-            <button className="mr-8 bg-orange-600 hover:bg-amber-500 text-white font-semibold py-1 px-4 ml-6 rounded">
-              <Link to="/login">Login</Link>
-            </button>
-            <Link
-              to="/register"
-              className="mr-8 border border-black text-black font-semibold py-[0.2rem] px-4 rounded"
-            >
-              Register
-            </Link>
+            {!auth.user ? (
+              <>
+                <Link
+                  to="/login"
+                  className="mr-8 bg-orange-600 hover:bg-amber-500 text-white font-semibold py-1 px-4 ml-6 rounded"
+                >
+                  Login
+                </Link>
+
+                <Link
+                  to="/register"
+                  className="mr-8 border border-black text-black font-semibold py-[0.2rem] px-4 rounded"
+                >
+                  Register
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  onClick={handleLogOut}
+                  className="mr-8 bg-orange-600 hover:bg-amber-500 text-white font-semibold py-1 px-4 ml-6 rounded"
+                >
+                  Logout
+                </Link>
+              </>
+            )}
           </ul>
         </div>
       </div>

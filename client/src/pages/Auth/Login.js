@@ -4,11 +4,13 @@ import Layout from "../../Components/Layout/Layout";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/auth";
 
 const Login = () => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
+  const [auth, setAuth] = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,6 +21,12 @@ const Login = () => {
       );
       if (res.data.success) {
         toast.success(res.data.message);
+        setAuth({
+          ...auth,
+          user: res.data.user,
+          token: res.data.token,
+        });
+        localStorage.setItem("auth", JSON.stringify(res.data));
         navigate("/");
       } else {
         toast.error(res.data.message);
@@ -36,7 +44,7 @@ const Login = () => {
           <div className="w-1/2 container mx-auto py-8">
             <div className="w-5/6 lg:w-1/2 shadow-xl mx-auto bg-gray-lightest rounded">
               <div className="py-4 px-8 text-black text-xl text-center border-b border-grey-lighter">
-                Log in to your Account
+                LOG IN TO YOUR ACCOUNT
               </div>
               <form onSubmit={handleSubmit} className="py-4 px-8">
                 <div className="flex mb-4">
