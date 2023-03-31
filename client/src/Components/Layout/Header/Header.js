@@ -37,7 +37,7 @@ const Header = () => {
             </li>
             {/* Navbar buttons */}
             <button className="mr-8 bg-orange-600 hover:bg-amber-500 text-white font-semibold py-1 px-4 ml-6 rounded">
-              Login
+              <Link to="/login">Login</Link>
             </button>
             <Link
               to="/register"
