@@ -1,9 +1,9 @@
-// error middleware || NEXT function
 //error middleware || NEXT function
 const errorMiddleware = (err, req, res, next) => {
   console.log(err);
   const defaultErrors = {
     statusCode: 500,
+    success: false,
     message: err,
   };
 
