@@ -16,7 +16,7 @@ module.exports.registerController = async (req, res, next) => {
   // check existing user
   const existingUser = await userModel.findOne({ email });
   if (existingUser) {
-    next("Email Already Registered please login");
+    next("Already Registered! please login");
   }
   const user = await userModel.create({ name, email, password });
   // token
@@ -35,29 +35,70 @@ module.exports.registerController = async (req, res, next) => {
 };
 
 // user login controller
+// module.exports.loginController = async (req, res, next) => {
+//   const { email, password } = req.body;
+//   // validation
+//   if (!email || !password) {
+//     next("Please Provide all fields");
+//   }
+
+//   // find user by email
+//   const user = await userModel.findOne({ email }).select("+password");
+//   if (!user) {
+//     next("Invalid Username or password");
+//   }
+//   // compare password
+//   const isMatch = await user.comparePassword(password);
+//   if (!isMatch) {
+//     next("Invalid Username or password");
+//   }
+//   user.password = undefined;
+//   const token = user.createJWT();
+//   res.status(200).json({
+//     success: true,
+//     message: "Login Successful! Welcome",
+//     user,
+//     token,
+//   });
+// };
+
 module.exports.loginController = async (req, res, next) => {
   const { email, password } = req.body;
+
   // validation
   if (!email || !password) {
-    next("Please Provide all fields");
+    return next("Please provide all fields");
   }
 
-  // find user by email
-  const user = await userModel.findOne({ email }).select("+password");
-  if (!user) {
-    next("Invalid Username or password");
+  try {
+    // find user by email
+    const user = await userModel.findOne({ email }).select("+password");
+
+    if (!user) {
+      return next("Invalid username or password");
+    }
+
+    // compare password
+    const isMatch = await user.comparePassword(password);
+
+    if (!isMatch) {
+      return next("Invalid username or password");
+    }
+
+    // remove password from user object
+    user.password = undefined;
+
+    // create JWT token
+    const token = user.createJWT();
+
+    // send response to client
+    res.status(200).json({
+      success: true,
+      message: "Login successful! Welcome",
+      user,
+      token,
+    });
+  } catch (error) {
+    return next(error);
   }
-  // compare password
-  const isMatch = await user.comparePassword(password);
-  if (!isMatch) {
-    next("Invalid Username or password");
-  }
-  user.password = undefined;
-  const token = user.createJWT();
-  res.status(200).json({
-    success: true,
-    message: "Login Successful! Welcome",
-    user,
-    token,
-  });
 };
