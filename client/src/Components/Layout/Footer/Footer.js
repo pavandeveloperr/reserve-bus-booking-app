@@ -8,7 +8,7 @@ export const Footer = () => {
     <div className="bg-gray-300 mt-6">
       <div className="flex justify-around pt-8 pb-3 ">
         <div>
-          <div className="flex text-orange-600">
+          <div className="flex text-orange-500">
             <span class="material-icons self-center">
               <FontAwesomeIcon icon={faBus} />
             </span>
